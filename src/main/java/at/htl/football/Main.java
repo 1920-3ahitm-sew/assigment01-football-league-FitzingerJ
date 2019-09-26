@@ -12,48 +12,41 @@ public class Main {
 
     public static void main(String[] args) {
         League league = new League();
-        List<String> lines = readFileInList("bundesliga-1819.csv");
-        for (int i = 1; i < lines.size(); i++) {
-            String line = lines.get(i);
-            String[] parts = line.split(";");
-            String date = parts[0];
-            String homeName = parts[1];
-            String guestName = parts[2];
-            int homeGoals = Integer.parseInt(parts[3]);
-            int guestGoals = Integer.parseInt(parts[4]);
-            league.addMatchResult(new Match(homeName, guestName, homeGoals, guestGoals));
-        }
-
-
+        readFileInList("bundesliga-1819.csv", league);
+        printTable(league.getTable());
     }
 
-    public static List<String> readFileInList(String fileName)
+    public static void readFileInList(String fileName, League league)
     {
 
         List<String> lines = Collections.emptyList();
         try
         {
             lines = readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+            for (int i = 1; i < lines.size(); i++) {
+                String line = lines.get(i);
+                String[] parts = line.split(";");
+                String homeName = parts[1];
+                String guestName = parts[2];
+                int homeGoals = Integer.parseInt(parts[3]);
+                int guestGoals = Integer.parseInt(parts[4]);
+                league.addMatchResult(new Match(homeName, guestName, homeGoals, guestGoals));
+            }
+
         }
 
         catch (IOException e)
         {
             e.printStackTrace();
         }
-        return lines;
     }
 
-    private void printTable(List<Team> teamList){
+    private static void printTable(List<Team> teams){
         System.out.println("Team        Pts   W   D   L   GF   GA   GD");
         for (int i = 0; i < teams.size(); i++) {
             System.out.print(teams.get(i).getName());
-            System.out.print(teams.get(i).getPoints());
-            System.out.print(teams.get(i).getWins());
-            System.out.print(teams.get(i).getDraws());
-            System.out.print(teams.get(i).getDefeats());
-            System.out.print(teams.get(i).getGoalsShot());
-            System.out.print(teams.get(i).getGoalsReceived());
-            System.out.print(teams.get(i).getGoalDifference());
+            System.out.print(" ");
+            System.out.printf("%2d  %2d  %2d  %2d  %2d  %2d  %2d\n", teams.get(i).getPoints(), teams.get(i).getWins(), teams.get(i).getDraws(), teams.get(i).getDefeats(), teams.get(i).getGoalsShot(), teams.get(i).getGoalsReceived(), teams.get(i).getGoalDifference());
         }
     }
 }

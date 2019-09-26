@@ -1,6 +1,6 @@
 package at.htl.football;
 
-public class Team {
+public class Team implements Comparable<Team>{
 
     private String name;
     private int points;
@@ -20,8 +20,10 @@ public class Team {
                 defeats++;
             } else if(match.getHomeGoals() > match.getGuestGoals()){
                 wins++;
+                this.points += 3;
             } else{
                 draws++;
+                this.points += 1;
             }
             goalsShot += match.getHomeGoals();
             goalsReceived += match.getGuestGoals();
@@ -30,8 +32,10 @@ public class Team {
                 defeats++;
             } else if (match.getHomeGoals() < match.getGuestGoals()) {
                 wins++;
+                this.points += 3;
             } else {
                 draws++;
+                this.points += 1;
             }
             goalsShot += match.getGuestGoals();
             goalsReceived += match.getHomeGoals();
@@ -67,10 +71,16 @@ public class Team {
     }
 
     public int getGoalDifference() {
-        if(goalsReceived == 0){
-            return goalsShot;
-        } else{
-            return goalsShot / goalsReceived;
+        return this.goalsShot - this.goalsReceived;
+    }
+
+    public int compareTo(Team o){
+        if (this.getPoints() < o.getPoints()) {
+            return 1;
+        } else if (this.getPoints() > o.getPoints()) {
+            return -1;
+        }else{
+            return o.getGoalDifference() - this.getGoalDifference();
         }
     }
 
